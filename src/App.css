@@ -1,0 +1,17 @@
+.flex-container {
+    display: flex;
+}
+
+.search-field {
+    margin: 5px 10px;
+}
+
+.detailed-view {
+    border:1px solid gray;
+    padding: 5px;
+    margin: 5px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+    height: 150px;
+    max-height: 300px;
+    max-width: 200px;
+}
