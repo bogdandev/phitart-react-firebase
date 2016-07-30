@@ -23,7 +23,9 @@ export const deleteItem = (item) => {
         });
 };
 
-export const getData = () => dataService.ref(Tables.PEOPLE).once('value');
+export const getData = () => {
+    return dataService.ref(Tables.PEOPLE).once('value');
+};
 
 export const subscribeToUpdates = (cb) => dataService.ref(Tables.PEOPLE).on('value', cb);
 
@@ -41,3 +43,30 @@ export const logout = () => {
     return firebase.auth().signOut();
 };
 
+
+export const addMeal = () => {
+    var uid = firebase.auth().currentUser.uid;
+    var date = new Date();
+    var today = date.toJSON().slice(0, 10);
+
+    var meal = {
+        uid: uid,
+        id: Date.now(),
+        date: Date.now(),
+        notes: 'Ursacian',
+        water: 0,
+        meals: {
+            breakfast: [{name: 'Eggs', servings: 2}],
+            lunch: [],
+            dinner: [],
+            snack: []
+        }
+    };
+
+    dataService.ref(Tables.DAILY_INTAKE + '/' + uid + '/' + today).set(meal);
+
+    dataService.ref(Tables.DAILY_INTAKE + '/' + uid).once('value')
+        .then(snapshot => {
+            console.log(snapshot.val());
+        });
+};

@@ -17,6 +17,7 @@ class ListContainer extends React.Component {
         this.deleteItem = this.deleteItem.bind(this);
         this.auth = this.auth.bind(this);
         this.logout = this.logout.bind(this);
+        this.addMeal = this.addMeal.bind(this);
     }
 
     componentWillMount() {
@@ -89,13 +90,18 @@ class ListContainer extends React.Component {
         });
     }
 
+    addMeal() {
+        DB.addMeal();
+    }
+
     auth() {
         DB.authPromise().then(data => {
-            let profile = Object.assign(
+            var profile = Object.assign(
                 {},
                 {
                     displayName: data.user.displayName,
-                    photoUrl: data.user.photoURL
+                    photoUrl: data.user.photoURL,
+                    uid: data.user.uid
                 }
             );
             this.setState({
@@ -118,8 +124,9 @@ class ListContainer extends React.Component {
         let authComp = this.state.userProfile ?
             <Logout name={this.state.userProfile.displayName}
                     photoUrl={this.state.userProfile.photoUrl}
+                    uid={this.state.userProfile.uid}
                     logout={this.logout}/> :
-            <Login auth={this.auth}/>
+            <Login auth={this.auth}/>;
         let renderedList = this.state.list && this.state.list.map((item, index) => {
                 return (
                     <Item key={index} item={item} delete={this.deleteItem}/>
@@ -130,6 +137,7 @@ class ListContainer extends React.Component {
                 {authComp}
                 <input type="text" placeholder="Add ppl here" ref="nameInput"/>
                 <button type="button" onClick={this.addPeople}>Add</button>
+                <button type="button" onClick={this.addMeal}>Add Meal</button>
                 <ul>
                     {renderedList}
                 </ul>
