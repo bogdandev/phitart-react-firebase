@@ -42,24 +42,40 @@ export const logout = () => {
   return firebase.auth().signOut();
 };
 
-export const addMeal = () => {
+export const addMeal = (item, type) => {
   var uid = firebase.auth().currentUser.uid;
   var date = new Date();
   var today = date.toJSON().slice(0, 10);
 
-  var meal = {
-    uid: uid,
-    id: Date.now(),
-    date: Date.now(),
-    notes: 'Ursacian',
-    water: 0,
-    meals: {
-      breakfast: [{name: 'Eggs', servings: 2}],
-      lunch: [],
-      dinner: [],
-      snack: []
-    }
-  };
+  let dbData;
+  dataService.ref(Tables.DAILY_INTAKE + '/' + uid + '/' + today).once('value')
+    .then(snapshot => {
+      dbData = snapshot.val();
+      if (dbData === null || dbData === undefined) {
+        var meal = {
+          uid: uid,
+          id: Date.now(),
+          date: Date.now(),
+          notes: '',
+          water: 0,
+          meals: {
+            breakfast: [],
+            lunch: [],
+            dinner: [],
+            snack: []
+          }
+        };
+        meal.meals[type].push(item);
+      } else {
+        console.log(dbData);
+        if(dbData.meals[type] === undefined) {
+          dbData.meals[type] = [];
+        }
+        dbData.meals[type].push(item);
+      }
 
-  dataService.ref(Tables.DAILY_INTAKE + '/' + uid + '/' + today).set(meal);
+      dataService.ref(Tables.DAILY_INTAKE + '/' + uid + '/' + today).set(dbData);
+    });
+
+
 };

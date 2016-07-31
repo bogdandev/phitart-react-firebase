@@ -7,7 +7,7 @@
     height: 500px;
     overflow-y: scroll;
     box-shadow: 0 0 4px rgba(0,0,0,0.3);
-    width: 600px;
+    width: 500px;
 }
 
 .detailed-view {
@@ -15,7 +15,9 @@
     margin: 5px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
     height: 500px;
-    width: 200px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
 }
 
 .detailed-view h2 {

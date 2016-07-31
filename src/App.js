@@ -7,7 +7,7 @@ import Logout from './components/Logout';
 import Item from './components/Item';
 import FoodItem from './components/FoodItem';
 import FoodDetails from './components/FoodDetails';
-import {Nutrients} from './api/constants';
+import {Nutrients, Units} from './api/constants';
 import './App.css';
 
 class App extends Component {
@@ -37,7 +37,8 @@ class App extends Component {
         {},
         {
           displayName: user.displayName,
-          photoUrl: user.photoURL
+          photoUrl: user.photoURL,
+          uid: user.uid
         }
       );
       if (user !== null) {
@@ -45,12 +46,6 @@ class App extends Component {
           userProfile: profile
         });
       }
-      this.setState({
-        userProfile: profile
-      });
-    });
-    DB.getData().then(snapshot => {
-      this.getValues(snapshot);
     });
   }
 
@@ -64,16 +59,14 @@ class App extends Component {
 
   getValues(snapshot) {
     let objList = snapshot.val();
-    let newList = [];
-    Object.keys(objList).map(key => {
-      newList.push(
-        Object.assign(
-          {},
-          objList[key],
-          {
-            id: key
-          }
-        )
+    let newList;
+    newList = Object.keys(objList).map(key => {
+      return Object.assign(
+        {},
+        objList[key],
+        {
+          id: key
+        }
       )
     });
     this.setState({list: newList});
@@ -101,23 +94,31 @@ class App extends Component {
     });
   }
 
-  addMeal() {
-    DB.addMeal();
+  addMeal(item, details) {
+    const {quantity, unit, type} = details;
+    let newItem;
+    if (unit === Units.GRAMS) {
+      const percent = parseInt(quantity) / 100;
+      newItem = Object.assign(
+        {},
+        item,
+        {
+          quantity: quantity + ' ' + unit,
+          water: item.water * percent,
+          calories: item.calories * percent,
+          protein: item.protein * percent,
+          fat: item.fat * percent,
+          carbs: item.carbs * percent,
+          sugars: item.sugars * percent,
+          fiber: item.fiber * percent
+        }
+      );
+    }
+    DB.addMeal(newItem, type);
   }
 
   auth() {
     DB.authPromise().then(data => {
-      var profile = Object.assign(
-        {},
-        {
-          displayName: data.user.displayName,
-          photoUrl: data.user.photoURL,
-          uid: data.user.uid
-        }
-      );
-      this.setState({
-        userProfile: profile
-      });
     }).catch(err => {
       console.log(err)
     });
@@ -188,11 +189,12 @@ class App extends Component {
         <input type="text" placeholder="Search food..." ref="foodInput"/>
         <button type="button" onClick={this.searchFood}>Search food</button>
         <div className="flex-container">
-          <div className="search-field">
+          {this.state.searchedItems.length > 0 && <div className="search-field">
             <div>Search results</div>
             {foodItems}
-          </div>
-          {this.state.detailedFood && <FoodDetails item={this.state.detailedFood}/>}
+          </div>}
+          {this.state.detailedFood && <FoodDetails item={this.state.detailedFood}
+                                                   addItem={this.addMeal}/>}
         </div>
       </div>
     );

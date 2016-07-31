@@ -12,3 +12,15 @@ export const Nutrients = {
   FIBER: 5,
   SUGARS: 6
 };
+
+export const Units = {
+  GRAMS: 'g',
+  SERVINGS: 'servings'
+};
+
+export const Meals = {
+  BREAKFAST: 'breakfast',
+  LUNCH: 'lunch',
+  DINNER: 'dinner',
+  SNACK: 'snack'
+};
