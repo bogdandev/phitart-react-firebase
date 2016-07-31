@@ -174,11 +174,6 @@ class App extends Component {
               uid={this.state.userProfile.uid}
               logout={this.logout}/> :
       <Login auth={this.auth}/>;
-    let renderedList = this.state.list && this.state.list.map((item, index) => {
-        return (
-          <Item key={index} item={item} delete={this.deleteItem}/>
-        );
-      });
 
     let foodItems = this.state.searchedItems.map((item, index) => {
       return (
@@ -190,11 +185,10 @@ class App extends Component {
     return (
       <div>
         {authComp}
+        <input type="text" placeholder="Search food..." ref="foodInput"/>
         <button type="button" onClick={this.searchFood}>Search food</button>
-        <button type="button" onClick={this.getDetails}>Get details</button>
         <div className="flex-container">
           <div className="search-field">
-            <input type="text" placeholder="Search food..." ref="foodInput"/>
             <div>Search results</div>
             {foodItems}
           </div>
