@@ -52,7 +52,7 @@ export const addMeal = (item, type) => {
     .then(snapshot => {
       dbData = snapshot.val();
       if (dbData === null || dbData === undefined) {
-        var meal = {
+        dbData = {
           uid: uid,
           id: Date.now(),
           date: Date.now(),
@@ -65,17 +65,14 @@ export const addMeal = (item, type) => {
             snack: []
           }
         };
-        meal.meals[type].push(item);
+        dbData.meals[type].push(item);
       } else {
         console.log(dbData);
-        if(dbData.meals[type] === undefined) {
+        if (dbData.meals[type] === undefined) {
           dbData.meals[type] = [];
         }
         dbData.meals[type].push(item);
       }
-
       dataService.ref(Tables.DAILY_INTAKE + '/' + uid + '/' + today).set(dbData);
     });
-
-
 };
