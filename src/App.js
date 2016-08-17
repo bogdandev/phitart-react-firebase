@@ -33,11 +33,12 @@ class App extends Component {
   //lifecycle hooks
   componentWillMount() {
     DB.loggedUser(user => {
+      let profileData = user.providerData[0]
       let profile = Object.assign(
         {},
         {
-          displayName: user.displayName,
-          photoUrl: user.photoURL,
+          displayName: profileData.displayName,
+          photoUrl: profileData.photoURL,
           uid: user.uid
         }
       );

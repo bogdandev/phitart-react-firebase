@@ -6,6 +6,7 @@ const config = {
   databaseURL: "https://apsfac-3211f.firebaseio.com",
   storageBucket: "apsfac-3211f.appspot.com",
 };
+
 firebase.initializeApp(config);
 
 let dataService = firebase.database();
@@ -13,12 +14,12 @@ let provider = new firebase.auth.GoogleAuthProvider();
 
 export const addItem = (item) => {
   dataService.ref(Tables.PEOPLE).push(item);
-};
+}
 
 export const deleteItem = (item) => {
   dataService.ref(Tables.PEOPLE).child(item.id).remove()
     .catch(err => {
-      console.log('Error deleting item: ' + err)
+      console.log('Error deleting item: ' + err);
     });
 };
 
@@ -34,13 +35,13 @@ export const authPromise = () => firebase.auth().signInWithPopup(provider);
 
 export const loggedUser = (cb) => {
   firebase.auth().onAuthStateChanged(user => {
-    cb(user);
+    cb(user)
   });
 };
 
 export const logout = () => {
   return firebase.auth().signOut();
-};
+}
 
 export const addMeal = (item, type) => {
   var uid = firebase.auth().currentUser.uid;
@@ -67,7 +68,6 @@ export const addMeal = (item, type) => {
         };
         dbData.meals[type].push(item);
       } else {
-        console.log(dbData);
         if (dbData.meals[type] === undefined) {
           dbData.meals[type] = [];
         }
