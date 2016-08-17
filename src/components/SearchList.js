@@ -2,19 +2,17 @@ import React, {PropTypes} from 'react'
 
 import FoodItem from './FoodItem'
 
-const SearchList = ({items, selectFood}) =>
+const SearchList = ({items, getDetails}) =>
   <div className="search-field">
     <span>Search Results</span>
     {
-      items.map((item, index) => {
-        return (
-          <FoodItem item={item} key={index}/>
-        )
-      })
+      items.map((item, index) => (<FoodItem item={item} getDetails={getDetails} key={index}/>))
     }
   </div>
 
 SearchList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
-  selectFood: PropTypes.func,
+  getDetails: PropTypes.func.isRequired,
 }
+
+export default SearchList
