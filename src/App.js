@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import * as DB from './api/firebase'
 import * as foods from './api/foodDb'
 
@@ -172,11 +174,11 @@ class App extends Component {
     });
 
     return (
-      <div>
+      <MuiThemeProvider>
         <Authenticate profile={this.state.userProfile}
                       authenticate={this.auth}
                       logout={this.logout}/>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }
