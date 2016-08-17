@@ -22,7 +22,8 @@ const Login = ({authenticate}) => (
       <i className="material-icons md-light no-account-icon">account_circle</i>
       <h1>Welcome Phitartist!</h1>
       <h2>You're lazy, this is why you are here. Use the lazy login: </h2>
-      <img src="http://i.stack.imgur.com/XzoRm.png" onClick={authenticate} className="google-login-button" alt="Google login"/>
+      <img src="http://i.stack.imgur.com/XzoRm.png" onClick={authenticate}
+            className="google-login-button" alt="Google login"/>
     </Paper>
   </div>
 );

@@ -30,21 +30,20 @@ class Layout extends Component {
 
   render() {
     const {profile, logout} = this.props
-    
+
     return (
       <div>
         <AppBar
             title="phitart"
             iconElementRight={<div><Avatar
               src={profile.photoUrl}
-              size={30}/> 
+              size={30}/>
                 <IconMenu
                   iconButtonElement={
                     <IconButton><MoreVertIcon /></IconButton>
                   }
                   targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                  anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                >
+                  anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}>
                   <MenuItem primaryText="Sign out" onClick={logout}/>
                 </IconMenu>
               </div>}
