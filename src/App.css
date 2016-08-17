@@ -28,8 +28,26 @@
 }
 
 .bg-photo {
-    background: url('https://static.pexels.com/photos/57772/pexels-photo-57772-large.jpeg') center no-repeat;
+    background: url('https://static.pexels.com/photos/26799/pexels-photo-26799-large.jpg') center no-repeat;
     height: 100vh;
     width: 100vw;
     background-size: cover; 
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(3px);
+    filter: blur(3px);
+    transform: scale(1.05);
+    overflow: hidden; 
+}
+
+.no-account-icon {
+    font-size: 64px!important;
+    margin: 30px 10px;
+    display: block;
+}
+.google-login-button {
+    margin: 40px 0 40px 0;
+    width: 250px;
+    cursor:pointer;
 }
