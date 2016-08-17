@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {PropTypes} from 'react'
 
-const FoodItem = (props) =>
+const FoodItem = ({item}) =>
   <div>
-    <i onClick={props.getDetails.bind(null, props.item.dbno)}
+    <i onClick={() => console.log('getting details')}
        style={{
          cursor: "pointer"
        }}
        className="material-icons">
       info_outline
     </i>
-    {props.item.name}
-  </div>;
+    {item.name}
+  </div>
 
-export default FoodItem;
+FoodItem.propTypes = {
+  item: PropTypes.object.isRequired,
+}
+
+export default FoodItem

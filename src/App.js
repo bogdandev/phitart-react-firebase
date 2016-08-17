@@ -1,36 +1,33 @@
-import React, {Component} from 'react';
-import * as DB from './api/firebase';
-import * as foods from './api/foodDb';
+import React, {Component} from 'react'
+import * as DB from './api/firebase'
+import * as foods from './api/foodDb'
 
-import Login from './components/Login';
-import Logout from './components/Logout';
-import Item from './components/Item';
-import FoodItem from './components/FoodItem';
-import FoodDetails from './components/FoodDetails';
-import {Nutrients, Units} from './api/constants';
-import './App.css';
+import Item from './components/Item'
+import FoodItem from './components/FoodItem'
+import FoodDetails from './components/FoodDetails'
+import Authenticate from './components/Authenticate'
+import {Nutrients, Units} from './api/constants'
+import './App.css'
 
 class App extends Component {
   constructor() {
-    super();
+    super()
 
     this.state = {
-      list: [],
       searchedItems: [],
       detailedFood: null,
       userProfile: null
     };
-    this.addPeople = this.addPeople.bind(this);
-    this.getValues = this.getValues.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
-    this.auth = this.auth.bind(this);
-    this.logout = this.logout.bind(this);
-    this.addMeal = this.addMeal.bind(this);
-    this.searchFood = this.searchFood.bind(this);
-    this.getDetails = this.getDetails.bind(this);
+    this.addPeople = this.addPeople.bind(this)
+    this.getValues = this.getValues.bind(this)
+    this.deleteItem = this.deleteItem.bind(this)
+    this.auth = this.auth.bind(this)
+    this.logout = this.logout.bind(this)
+    this.addMeal = this.addMeal.bind(this)
+    this.searchFood = this.searchFood.bind(this)
+    this.getDetails = this.getDetails.bind(this)
   }
 
-  //lifecycle hooks
   componentWillMount() {
     DB.loggedUser(user => {
       let profileData = user.providerData[0]
@@ -41,26 +38,23 @@ class App extends Component {
           photoUrl: profileData.photoURL,
           uid: user.uid
         }
-      );
+      )
       if (user !== null) {
         this.setState({
           userProfile: profile
-        });
+        })
       }
-    });
+    })
   }
-
   componentDidMount() {
-    DB.subscribeToUpdates(this.getValues);
+    DB.subscribeToUpdates(this.getValues)
   }
-
   componentWillUnmount() {
-    DB.unsubscribeFromUpdates();
+    DB.unsubscribeFromUpdates()
   }
 
   getValues(snapshot) {
-    let objList = snapshot.val();
-    let newList;
+    let objList = snapshot.val(), newList
     newList = Object.keys(objList).map(key => {
       return Object.assign(
         {},
@@ -70,36 +64,36 @@ class App extends Component {
         }
       )
     });
-    this.setState({list: newList});
+    this.setState({list: newList})
   }
 
   addPeople() {
-    let newList = [].concat(this.state.list);
+    let newList = [].concat(this.state.list)
     let obj = {
       name: this.refs.nameInput.value,
       age: Math.floor(Math.random() * 100 + 1)
-    };
+    }
     newList.push(obj);
     this.setState({
       list: newList
     }, () => {
-      DB.addItem(obj);
-    });
+      DB.addItem(obj)
+    })
   }
 
   deleteItem(item) {
-    DB.deleteItem(item);
-    let newList = this.state.list.filter(listItem => listItem.id !== item.id);
+    DB.deleteItem(item)
+    let newList = this.state.list.filter(listItem => listItem.id !== item.id)
     this.setState({
       list: newList
-    });
+    })
   }
 
   addMeal(item, details) {
-    const {quantity, unit, type} = details;
-    let newItem;
+    const {quantity, unit, type} = details
+    let newItem
     if (unit === Units.GRAMS) {
-      const percent = parseInt(quantity) / 100;
+      const percent = parseInt(quantity) / 100
       newItem = Object.assign(
         {},
         item,
@@ -113,9 +107,9 @@ class App extends Component {
           sugars: item.sugars * percent,
           fiber: item.fiber * percent
         }
-      );
+      )
     }
-    DB.addMeal(newItem, type);
+    DB.addMeal(newItem, type)
   }
 
   auth() {
@@ -151,8 +145,8 @@ class App extends Component {
   getDetails(dbno) {
     foods.getDetails(dbno)
       .then(response => {
-        let food = response.report.food;
-        let nutrients = food.nutrients;
+        let food = response.report.food
+        let nutrients = food.nutrients
         let selectedItem = {
           name: food.name,
           water: nutrients[Nutrients.WATER].value,
@@ -162,21 +156,14 @@ class App extends Component {
           carbs: nutrients[Nutrients.CARBS].value,
           sugars: nutrients[Nutrients.SUGARS].value,
           fiber: nutrients[Nutrients.FIBER].value
-        };
+        }
         this.setState({
           detailedFood: selectedItem
         })
-      });
+      })
   }
 
   render() {
-    let authComp = this.state.userProfile ?
-      <Logout name={this.state.userProfile.displayName}
-              photoUrl={this.state.userProfile.photoUrl}
-              uid={this.state.userProfile.uid}
-              logout={this.logout}/> :
-      <Login auth={this.auth}/>;
-
     let foodItems = this.state.searchedItems.map((item, index) => {
       return (
         <FoodItem item={item} key={index}
@@ -186,17 +173,9 @@ class App extends Component {
 
     return (
       <div>
-        {authComp}
-        <input type="text" placeholder="Search food..." ref="foodInput"/>
-        <button type="button" onClick={this.searchFood}>Search food</button>
-        <div className="flex-container">
-          {this.state.searchedItems.length > 0 && <div className="search-field">
-            <div>Search results</div>
-            {foodItems}
-          </div>}
-          {this.state.detailedFood && <FoodDetails item={this.state.detailedFood}
-                                                   addItem={this.addMeal}/>}
-        </div>
+        <Authenticate profile={this.state.userProfile}
+                      authenticate={this.auth}
+                      logout={this.logout}/>
       </div>
     );
   }
