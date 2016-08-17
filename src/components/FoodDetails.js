@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 
-import {Meals, Units} from './../api/constants';
+import {Meals, Units} from '../api/constants';
 
-class FoodDetails extends React.Component {
+class FoodDetails extends Component {
   constructor() {
     super();
     this.state = {
@@ -42,7 +42,7 @@ class FoodDetails extends React.Component {
         unit: this.state.unit,
         type: this.state.type
       }
-    );
+    )
   }
 
   render() {
@@ -77,8 +77,13 @@ class FoodDetails extends React.Component {
           <li>Protein: {this.props.item.protein}</li>
         </ul>
       </div>
-    );
+    )
   }
 }
 
-export default FoodDetails;
+FoodDetails.propTypes = {
+  item: PropTypes.object.isRequired,
+  addItem: PropTypes.func.isRequired,
+}
+
+export default FoodDetails
