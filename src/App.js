@@ -1,67 +1,44 @@
 import React, {Component} from 'react'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
 
-import * as DB from './api/firebase'
+import Login from './components/Login'
 
-import Authenticate from './components/Authenticate'
-import {Nutrients, Units} from './api/constants'
-import './App.css'
+
+import {createStore, compose, applyMiddleware, combineReducers} from 'redux'
+import {connect, Provider} from 'react-redux'
+import {Route} from 'react-router'
+import {reduxReactRouter, routerStateReducer, ReduxRouter, push} from 'redux-router'
+import {createHistory} from 'history'
+
+import rootReducer from './reducers/rootReducer'
+import todoReducer from './reducers/todoReducer'
+
+// import Dummy1 from './components/Dummy1'
+// import Dummy2 from './components/Dummy2'
+// import Dummy3 from './components/Dummy3'
+
+import todoContainer from './containers/todoContainer'
+
+// const routes = (
+//   <Route path="/" component={Login}>
+//     <Route path="parent" component={Dummy1}>
+//       <Route path="child" component={Dummy2}/>
+//       <Route path="child/:id" component={Dummy3}/>
+//     </Route>
+//   </Route>
+// )
+
+let store = createStore(
+  rootReducer
+);
 
 class App extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      userProfile: null,
-    };
-    this.auth = this.auth.bind(this)
-    this.logout = this.logout.bind(this)
-  }
-
-  componentWillMount() {
-    DB.loggedUser(user => {
-      let profileData = user.providerData[0]
-      let profile = Object.assign(
-        {},
-        {
-          displayName: profileData.displayName,
-          photoUrl: profileData.photoURL,
-          uid: user.uid
-        }
-      )
-      if (user !== null) {
-        this.setState({
-          userProfile: profile
-        })
-      }
-    })
-  }
-
-  auth() {
-    DB.authPromise().then(data => {
-    }).catch(err => {
-      console.log(err)
-    });
-  }
-  logout() {
-    DB.logout().then(we => {
-      this.setState({
-        userProfile: null
-      });
-    });
-  }
-
   render() {
     return (
-      <MuiThemeProvider>
-        <Authenticate profile={this.state.userProfile}
-                      authenticate={this.auth}
-                      logout={this.logout}/>
-      </MuiThemeProvider>
-    );
+      <Provider store={store}>
+        <todoContainer/>
+      </Provider>
+    )
   }
 }
 
-export default App;
+export default App
